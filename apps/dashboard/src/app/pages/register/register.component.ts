@@ -31,18 +31,6 @@ import { AuthService } from '../../services/auth.service';
 
         <form class="mt-8 space-y-6" (ngSubmit)="onSubmit()">
           <div class="rounded-md shadow-sm space-y-2">
-            <div>
-              <label for="organizationName" class="sr-only">Organization Name</label>
-              <input
-                id="organizationName"
-                name="organizationName"
-                type="text"
-                [(ngModel)]="organizationName"
-                required
-                class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Organization Name"
-              />
-            </div>
             <div class="grid grid-cols-2 gap-2">
               <div>
                 <label for="firstName" class="sr-only">First Name</label>
@@ -118,7 +106,6 @@ export class RegisterComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  organizationName = '';
   firstName = '';
   lastName = '';
   email = '';
@@ -127,7 +114,7 @@ export class RegisterComponent {
   error = signal('');
 
   onSubmit() {
-    if (!this.organizationName || !this.firstName || !this.lastName || !this.email || !this.password) {
+    if (!this.firstName || !this.lastName || !this.email || !this.password) {
       this.error.set('Please fill in all fields');
       return;
     }
@@ -141,7 +128,6 @@ export class RegisterComponent {
     this.error.set('');
 
     this.authService.register({
-      organizationName: this.organizationName,
       firstName: this.firstName,
       lastName: this.lastName,
       email: this.email,
