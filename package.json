@@ -1,0 +1,13 @@
+{
+  "name": "@malbazoon-d35d185c-1a31-4034-8389-d33a401ce699/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@nx/js": "22.3.3",
+    "@nx/workspace": "22.3.3",
+    "nx": "22.3.3"
+  }
+}
