@@ -32,8 +32,9 @@ export class AuthService {
     // If no organizationId provided, create a new organization for the user
     let organizationId = createUserDto.organizationId;
     if (!organizationId) {
+      const orgName = createUserDto.organizationName || `${createUserDto.firstName}'s Organization`;
       const newOrg = this.organizationRepository.create({
-        name: `${createUserDto.firstName}'s Organization`,
+        name: orgName,
         description: 'Default organization',
       });
       const savedOrg = await this.organizationRepository.save(newOrg);
