@@ -6,7 +6,7 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: npm install && npx nx build api --configuration=production
+    buildCommand: NODE_ENV=development npm install && NODE_ENV=production npx nx build api --configuration=production
     startCommand: node dist/apps/api/main.js
     envVars:
       - key: NODE_ENV
@@ -29,7 +29,7 @@ services:
     env: static
     region: oregon
     plan: free
-    buildCommand: npm install && npx nx build dashboard --configuration=production
+    buildCommand: NODE_ENV=development npm install && NODE_ENV=production npx nx build dashboard --configuration=production
     staticPublishPath: dist/apps/dashboard/browser
     headers:
       - path: /*
