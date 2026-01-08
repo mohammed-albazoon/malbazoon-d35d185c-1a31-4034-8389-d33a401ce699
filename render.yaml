@@ -1,0 +1,41 @@
+# Render Blueprint - deploys both backend and frontend
+services:
+  # Backend API
+  - type: web
+    name: task-management-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npx nx build api --configuration=production
+    startCommand: node dist/apps/api/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_PATH
+        value: /opt/render/project/src/data/task-management.db
+      - key: PORT
+        value: 3000
+      - key: CORS_ORIGIN
+        fromService:
+          name: task-management-dashboard
+          type: web
+          property: host
+
+  # Frontend Dashboard
+  - type: web
+    name: task-management-dashboard
+    env: static
+    region: oregon
+    plan: free
+    buildCommand: npm install && npx nx build dashboard --configuration=production
+    staticPublishPath: dist/apps/dashboard/browser
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
