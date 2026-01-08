@@ -18,10 +18,7 @@ services:
       - key: PORT
         value: 3000
       - key: CORS_ORIGIN
-        fromService:
-          name: task-management-dashboard
-          type: web
-          property: host
+        value: https://task-management-dashboard-83jv.onrender.com
 
   # Frontend Dashboard
   - type: web
