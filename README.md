@@ -2,6 +2,10 @@
 
 A full-stack task management application with role-based access control (RBAC), built using NX monorepo architecture with NestJS backend and Angular frontend.
 
+**Live Demo:** [https://task-management-dashboard-83jv.onrender.com](https://task-management-dashboard-83jv.onrender.com)
+
+> **Note:** The app is hosted on Render's free tier, so it may take 30-60 seconds to wake up on first visit.
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -44,9 +48,10 @@ This secure task management system allows users to manage tasks with role-based 
 
 ### UI Features
 - ✅ **Responsive Design** - Mobile to desktop support
-- ✅ **Dark/Light Mode** - Theme toggle
+- ✅ **Dark/Light Mode** - Theme toggle with persistence
 - ✅ **Task Filtering** - Filter by category, priority, search
-- ✅ **Real-time Stats** - Task completion visualization
+- ✅ **Real-time Stats** - Task statistics cards
+- ✅ **Task Distribution Bar Chart** - Visual bar chart showing task distribution by status (To Do, In Progress, Done) with percentages
 
 ---
 
@@ -469,18 +474,48 @@ npx nx test api
 npx nx test dashboard
 ```
 
+### Run E2E Tests
+```bash
+npx nx test api-e2e
+```
+
 ### Run Specific Test File
 ```bash
 npx nx test api --testFile=auth.service.spec.ts
 ```
 
-### Test Coverage
+### Test Coverage Summary
 
-Tests cover:
-- **Authentication Service** - Login, register, token generation
-- **Task Service** - CRUD operations, filtering
-- **Permission System** - Role-based access validation
-- **RBAC Guards** - Permission enforcement
+| Project | Test Suites | Tests | Status |
+|---------|-------------|-------|--------|
+| api (Backend) | 5 | 90 | ✅ |
+| data (Shared lib) | 2 | 11 | ✅ |
+| api-e2e (E2E) | 1 | 10 | ✅ |
+| dashboard (Frontend) | 5 | 77 | ✅ |
+| auth (Shared lib) | 1 | 1 | ✅ |
+| **Total** | **14** | **189** | ✅ |
+
+### Tests Cover
+
+**Backend (90 tests)**
+- `roles.guard.spec.ts` - Role-based access control validation
+- `permissions.guard.spec.ts` - Permission enforcement
+- `auth.service.spec.ts` - Login, register, token generation
+- `tasks.service.spec.ts` - CRUD operations, filtering, access control
+- `tasks.controller.spec.ts` - API endpoint validation
+
+**Frontend (77 tests)**
+- `dashboard.component.spec.ts` - Main dashboard component (37 tests)
+- `login.component.spec.ts` - Login page validation (23 tests)
+- `auth.service.spec.ts` - Authentication service (8 tests)
+- `task.service.spec.ts` - Task state management (7 tests)
+- `app.spec.ts` - App component (2 tests)
+
+**E2E (10 tests)**
+- Health check, authentication flow, task CRUD operations
+
+**Shared Libraries (12 tests)**
+- Permission logic validation, data utilities
 
 ---
 

@@ -59,7 +59,7 @@ import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from 
         @if (activeTab === 'tasks') {
           <!-- Stats -->
           @if (taskService.stats()) {
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
                 <h3 class="text-sm text-gray-500 dark:text-gray-400">Total Tasks</h3>
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ taskService.stats()?.total }}</p>
@@ -77,6 +77,76 @@ import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from 
                 <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
                   <div class="bg-blue-600 h-4 rounded-full transition-all"
                        [style.width.%]="taskService.stats()?.completionRate || 0"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task Distribution Bar Chart -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Task Distribution</h3>
+              <div class="flex items-end justify-center gap-8 h-48">
+                <!-- To Do Bar -->
+                <div class="flex flex-col items-center">
+                  <div class="relative flex flex-col items-center justify-end w-20 h-36">
+                    <div class="w-full bg-yellow-400 rounded-t-lg transition-all duration-500 ease-out"
+                         [style.height.%]="getBarHeight('todo')">
+                    </div>
+                    <span class="absolute -top-6 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      {{ getStatusCount('todo') }}
+                    </span>
+                  </div>
+                  <div class="mt-2 flex items-center gap-1">
+                    <span class="w-3 h-3 bg-yellow-400 rounded-full"></span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">To Do</span>
+                  </div>
+                </div>
+
+                <!-- In Progress Bar -->
+                <div class="flex flex-col items-center">
+                  <div class="relative flex flex-col items-center justify-end w-20 h-36">
+                    <div class="w-full bg-blue-400 rounded-t-lg transition-all duration-500 ease-out"
+                         [style.height.%]="getBarHeight('in_progress')">
+                    </div>
+                    <span class="absolute -top-6 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      {{ getStatusCount('in_progress') }}
+                    </span>
+                  </div>
+                  <div class="mt-2 flex items-center gap-1">
+                    <span class="w-3 h-3 bg-blue-400 rounded-full"></span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">In Progress</span>
+                  </div>
+                </div>
+
+                <!-- Done Bar -->
+                <div class="flex flex-col items-center">
+                  <div class="relative flex flex-col items-center justify-end w-20 h-36">
+                    <div class="w-full bg-green-400 rounded-t-lg transition-all duration-500 ease-out"
+                         [style.height.%]="getBarHeight('done')">
+                    </div>
+                    <span class="absolute -top-6 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      {{ getStatusCount('done') }}
+                    </span>
+                  </div>
+                  <div class="mt-2 flex items-center gap-1">
+                    <span class="w-3 h-3 bg-green-400 rounded-full"></span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">Done</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Percentage breakdown -->
+              <div class="mt-6 flex justify-center gap-6">
+                <div class="text-center">
+                  <span class="text-2xl font-bold text-yellow-500">{{ getStatusPercentage('todo') }}%</span>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">To Do</p>
+                </div>
+                <div class="text-center">
+                  <span class="text-2xl font-bold text-blue-500">{{ getStatusPercentage('in_progress') }}%</span>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">In Progress</p>
+                </div>
+                <div class="text-center">
+                  <span class="text-2xl font-bold text-green-500">{{ getStatusPercentage('done') }}%</span>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">Done</p>
                 </div>
               </div>
             </div>
@@ -621,5 +691,29 @@ export class DashboardComponent implements OnInit {
       case 'urgent': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  }
+
+  // Bar chart helper methods
+  getStatusCount(status: string): number {
+    const stats = this.taskService.stats();
+    if (!stats?.byStatus) return 0;
+    const statusData = stats.byStatus.find(s => s.status === status);
+    return statusData ? parseInt(statusData.count, 10) : 0;
+  }
+
+  getBarHeight(status: string): number {
+    const stats = this.taskService.stats();
+    if (!stats?.total || stats.total === 0) return 0;
+    const count = this.getStatusCount(status);
+    // Scale to percentage, minimum 5% if there's at least 1 task for visibility
+    const percentage = (count / stats.total) * 100;
+    return count > 0 ? Math.max(percentage, 5) : 0;
+  }
+
+  getStatusPercentage(status: string): number {
+    const stats = this.taskService.stats();
+    if (!stats?.total || stats.total === 0) return 0;
+    const count = this.getStatusCount(status);
+    return Math.round((count / stats.total) * 100);
   }
 }
