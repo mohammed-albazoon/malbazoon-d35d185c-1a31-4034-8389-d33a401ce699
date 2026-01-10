@@ -558,7 +558,9 @@ export class DashboardComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      this.taskService.updateTask(task.id, { status: newStatus }).subscribe();
+      this.taskService.updateTask(task.id, { status: newStatus }).subscribe({
+        next: () => this.taskService.loadStats().subscribe(),
+      });
     }
   }
 

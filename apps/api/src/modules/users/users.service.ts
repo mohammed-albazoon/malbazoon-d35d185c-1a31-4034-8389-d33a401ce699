@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
-import { User, Organization } from '../../entities';
+import { User, Organization, Task, AuditLog } from '../../entities';
 import { CreateUserDto, UpdateUserDto, Role, AuditAction } from '@task-management/data';
 import { AuditService } from '../audit/audit.service';
 
@@ -12,6 +12,10 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Organization)
     private readonly organizationRepository: Repository<Organization>,
+    @InjectRepository(Task)
+    private readonly taskRepository: Repository<Task>,
+    @InjectRepository(AuditLog)
+    private readonly auditLogRepository: Repository<AuditLog>,
     private readonly auditService: AuditService
   ) {}
 
@@ -154,16 +158,25 @@ export class UsersService {
       throw new ForbiddenException('Only owners can delete users');
     }
 
-    await this.userRepository.remove(user);
+    try {
+      // Clear references in related tables before deletion
+      await this.taskRepository.update({ createdById: id }, { createdById: null as unknown as undefined });
+      await this.auditLogRepository.update({ userId: id }, { userId: null as unknown as undefined });
 
-    await this.auditService.log({
-      userId: currentUser.id,
-      userEmail: currentUser.email,
-      action: AuditAction.DELETE,
-      resource: 'user',
-      resourceId: id,
-      details: `Deleted user: ${user.email}`,
-    });
+      await this.userRepository.remove(user);
+
+      await this.auditService.log({
+        userId: currentUser.id,
+        userEmail: currentUser.email,
+        action: AuditAction.DELETE,
+        resource: 'user',
+        resourceId: id,
+        details: `Deleted user: ${user.email}`,
+      });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      throw error;
+    }
   }
 
   private async getAccessibleOrganizationIds(user: User): Promise<string[]> {

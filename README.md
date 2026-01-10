@@ -47,11 +47,13 @@ This secure task management system allows users to manage tasks with role-based 
 - ✅ **Audit Logging** - Track all user actions
 
 ### UI Features
+- ✅ **Modern Dark Theme** - Sleek dark UI with gradient accents
 - ✅ **Responsive Design** - Mobile to desktop support
 - ✅ **Dark/Light Mode** - Theme toggle with persistence
 - ✅ **Task Filtering** - Filter by category, priority, search
 - ✅ **Real-time Stats** - Task statistics cards
 - ✅ **Task Distribution Bar Chart** - Visual bar chart showing task distribution by status (To Do, In Progress, Done) with percentages
+- ✅ **Styled Auth Pages** - Beautiful login/registration with auth flow info
 
 ---
 
@@ -293,7 +295,8 @@ Content-Type: application/json
   "email": "user@example.com",
   "password": "password123",
   "firstName": "John",
-  "lastName": "Doe"
+  "lastName": "Doe",
+  "organizationName": "Acme Inc."  // Optional, defaults to "{firstName}'s Organization"
 }
 
 Response 201:
@@ -549,25 +552,6 @@ npx nx test api --testFile=auth.service.spec.ts
 3. **Advanced Role Delegation**
    - Allow owners to delegate specific permissions
    - Custom role creation
-
-### Features
-
-1. **Task Assignments**
-   - Assign tasks to specific users
-   - Email notifications
-
-2. **Comments & Attachments**
-   - Add comments to tasks
-   - File attachments
-
-3. **Recurring Tasks**
-   - Create recurring task schedules
-
----
-
-## License
-
-This project is part of a technical assessment for TurboVets.
 
 ---
 

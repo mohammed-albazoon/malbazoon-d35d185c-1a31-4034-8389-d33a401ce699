@@ -14,10 +14,10 @@ export class AuditLog {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column()
-  userId!: string;
+  @Column({ nullable: true })
+  userId?: string;
 
-  @ManyToOne(() => User, (user) => user.auditLogs, { nullable: true })
+  @ManyToOne(() => User, (user) => user.auditLogs, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'userId' })
   user?: User;
 
