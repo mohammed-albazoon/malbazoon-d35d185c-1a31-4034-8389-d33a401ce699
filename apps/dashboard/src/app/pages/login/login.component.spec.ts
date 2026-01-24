@@ -87,14 +87,14 @@ describe('LoginComponent', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const submitButton = compiled.querySelector('button[type="submit"]');
       expect(submitButton).toBeTruthy();
-      expect(submitButton?.textContent).toContain('Sign in');
+      expect(submitButton?.textContent).toContain('Sign In');
     });
 
     it('should render link to registration page', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const registerLink = compiled.querySelector('a[href="/register"]');
       expect(registerLink).toBeTruthy();
-      expect(registerLink?.textContent).toContain('create a new account');
+      expect(registerLink?.textContent).toContain('Create one');
     });
   });
 
@@ -235,7 +235,8 @@ describe('LoginComponent', () => {
       fixture.detectChanges();
 
       const compiled = fixture.nativeElement as HTMLElement;
-      const errorDiv = compiled.querySelector('.bg-red-100');
+      // Component uses 'bg-red-500/10' class for error div
+      const errorDiv = compiled.querySelector('.text-red-400');
       expect(errorDiv).toBeTruthy();
       expect(errorDiv?.textContent).toContain('Test error message');
     });
@@ -245,7 +246,8 @@ describe('LoginComponent', () => {
       fixture.detectChanges();
 
       const compiled = fixture.nativeElement as HTMLElement;
-      const errorDiv = compiled.querySelector('.bg-red-100');
+      // Component uses 'bg-red-500/10' class for error div
+      const errorDiv = compiled.querySelector('.text-red-400');
       expect(errorDiv).toBeFalsy();
     });
 
@@ -267,13 +269,13 @@ describe('LoginComponent', () => {
       expect(submitButton?.textContent).toContain('Signing in...');
     });
 
-    it('should show "Sign in" text when not loading', () => {
+    it('should show "Sign In" text when not loading', () => {
       component.loading.set(false);
       fixture.detectChanges();
 
       const compiled = fixture.nativeElement as HTMLElement;
       const submitButton = compiled.querySelector('button[type="submit"]');
-      expect(submitButton?.textContent).toContain('Sign in');
+      expect(submitButton?.textContent).toContain('Sign In');
     });
   });
 });
