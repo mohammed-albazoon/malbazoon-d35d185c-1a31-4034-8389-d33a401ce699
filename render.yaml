@@ -1,4 +1,11 @@
 # Render Blueprint - deploys both backend and frontend
+
+# PostgreSQL Database for persistent storage
+databases:
+  - name: task-management-db
+    plan: free
+    region: oregon
+
 services:
   # Backend API
   - type: web
@@ -13,8 +20,10 @@ services:
         value: production
       - key: JWT_SECRET
         generateValue: true
-      - key: DATABASE_PATH
-        value: /opt/render/project/src/data/task-management.db
+      - key: DATABASE_URL
+        fromDatabase:
+          name: task-management-db
+          property: connectionString
       - key: PORT
         value: 3000
       - key: CORS_ORIGIN
